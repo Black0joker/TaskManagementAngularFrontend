@@ -5,6 +5,41 @@
   gap: 1rem;
 }
 
+.offline-banner {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--warning-border);
+  background: var(--warning-soft);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+
+.offline-banner app-icon {
+  color: var(--warning);
+  margin-top: 0.125rem;
+}
+
+.offline-banner p {
+  flex: 1;
+  line-height: 1.45;
+}
+
+.offline-retry {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--brand-ink);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+}
+
+.offline-retry:hover {
+  background: var(--brand-soft);
+}
+
 .input-wrap {
   position: relative;
   display: flex;

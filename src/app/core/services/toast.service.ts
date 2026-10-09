@@ -13,6 +13,11 @@ export class ToastService {
   readonly toasts = signal<Toast[]>([]);
 
   private push(kind: Toast['kind'], message: string): void {
+    // Dedupe: an outage can fail many requests at once (e.g. every guard
+    // run) — don't stack identical toasts, show one until it dismisses.
+    if (this.toasts().some((t) => t.kind === kind && t.message === message)) {
+      return;
+    }
     const id = nextId++;
     this.toasts.update((t) => [...t, { id, kind, message }]);
     window.setTimeout(() => this.dismiss(id), 5000);

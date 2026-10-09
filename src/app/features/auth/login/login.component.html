@@ -1,4 +1,11 @@
 <app-auth-layout title="Welcome back" subtitle="Sign in to your TaskManagement workspace.">
+  @if (offline()) {
+    <div class="offline-banner" role="alert">
+      <app-icon name="error" [size]="16" />
+      <p>Cannot reach the API. Check that the backend is running, then try again.</p>
+      <button type="button" (click)="retry()" class="offline-retry">Retry</button>
+    </div>
+  }
   <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
     <div>
       <label class="field-label" for="email">Email</label>

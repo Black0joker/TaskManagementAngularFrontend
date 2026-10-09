@@ -43,22 +43,6 @@ export class AuthFacade {
     );
   }
 
-  restoreSession(): Observable<boolean> {
-    if (!this.tokens.accessToken) return new Observable((s) => { s.next(false); s.complete(); });
-    if (this.store.user()) return new Observable((s) => { s.next(true); s.complete(); });
-    return this.users.me().pipe(
-      map((me) => {
-        this.store.setUser(me);
-        return true;
-      }),
-      catchError(() => {
-        this.tokens.clear();
-        this.store.clear();
-        return [false];
-      }),
-    );
-  }
-
   logout(): void {
     const refreshToken = this.tokens.refreshToken;
     const done = () => {
