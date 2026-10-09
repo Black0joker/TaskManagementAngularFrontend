@@ -1,0 +1,69 @@
+<div class="page">
+  <a [routerLink]="['/projects', projectId]" class="back-link">
+    <app-icon name="arrowLeft" [size]="14" /> Project
+  </a>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Labels <span class="pill count-pill tnum">{{ labels().length }}</span></h1>
+      <p class="page-subtitle">Color-coded tags — color must be <code>#RRGGBB</code>.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="createForm" (ngSubmit)="create()" class="card card-pad create-card">
+    <label class="field">Name <span class="field-note">(max 50)</span>
+      <input formControlName="name" placeholder="e.g. frontend" class="field-input field-name" />
+    </label>
+    <label class="field">Color
+      <span class="color-row">
+        <input type="color" formControlName="color" aria-label="Pick label color" class="color-swatch" />
+        <input formControlName="color" maxlength="7" placeholder="#4F46E5" class="field-input field-color" />
+      </span>
+    </label>
+    <button type="submit" [disabled]="createForm.invalid || busy()" class="btn btn-primary btn-sm">
+      <app-icon name="plus" [size]="14" /> Add label
+    </button>
+    @if (createForm.controls.color.touched && createForm.controls.color.invalid) {
+      <p class="field-error full-row">Color must match #RRGGBB.</p>
+    }
+  </form>
+
+  @if (loading()) {
+    <div class="card list-card skeleton-list" aria-label="Loading labels">
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+    </div>
+  } @else if (labels().length === 0) {
+    <div class="empty-wrap">
+      <app-empty-state title="No labels yet" hint="Create the first label above to organize tasks." icon="tags" />
+    </div>
+  } @else {
+    <ul class="card list-card">
+      @for (l of labels(); track l.id) {
+        <li class="label-row">
+          <span class="dot" [style.background]="l.color"></span>
+          @if (editingId() === l.id) {
+            <form [formGroup]="editForm" (ngSubmit)="save()" class="edit-form">
+              <input formControlName="name" aria-label="Label name" class="field-input" />
+              <input type="color" formControlName="color" aria-label="Label color" class="color-swatch-sm" />
+              <input formControlName="color" maxlength="7" aria-label="Label color hex" class="field-input field-color-sm" />
+              <button type="submit" [disabled]="editForm.invalid" class="link-save">Save</button>
+              <button type="button" (click)="editingId.set(null)" class="link-cancel">Cancel</button>
+            </form>
+          } @else {
+            <span class="label-name">{{ l.name }}</span>
+            <code class="label-color tnum">{{ l.color }}</code>
+            <span class="row-actions">
+              <button (click)="startEdit(l)" class="icon-btn" aria-label="Edit {{ l.name }}">
+                <app-icon name="pencil" [size]="14" />
+              </button>
+              <button (click)="remove(l.id)" class="icon-danger" aria-label="Delete {{ l.name }}">
+                <app-icon name="trash" [size]="14" />
+              </button>
+            </span>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

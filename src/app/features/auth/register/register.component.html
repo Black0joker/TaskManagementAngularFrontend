@@ -1,0 +1,68 @@
+<app-auth-layout title="Create your account" subtitle="Free to start. Bring your team when you're ready.">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="register-grid" novalidate>
+    <div>
+      <label class="field-label" for="firstName">First name</label>
+      <input id="firstName" formControlName="firstName" autocomplete="given-name" placeholder="Ada" class="field-input" />
+      @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+        <p class="field-error">Required, max 100.</p>
+      }
+    </div>
+    <div>
+      <label class="field-label" for="lastName">Last name</label>
+      <input id="lastName" formControlName="lastName" autocomplete="family-name" placeholder="Lovelace" class="field-input" />
+      @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+        <p class="field-error">Required, max 100.</p>
+      }
+    </div>
+    <div>
+      <label class="field-label" for="userName">Username</label>
+      <input id="userName" formControlName="userName" autocomplete="username" placeholder="adal" class="field-input" />
+      @if (form.controls.userName.touched && form.controls.userName.invalid) {
+        <p class="field-error">Username is required.</p>
+      }
+    </div>
+    <div>
+      <label class="field-label" for="email">Email</label>
+      <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="you@company.com" class="field-input" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <p class="field-error">Enter a valid email (max 256).</p>
+      }
+      @if (serverErrors()['email']) {
+        <p class="field-error">{{ serverErrors()['email'] }}</p>
+      }
+    </div>
+    <div class="col-span-full">
+      <label class="field-label" for="password">Password</label>
+      <div class="input-wrap">
+        <input
+          id="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="••••••••"
+          class="field-input has-trailing" />
+        <button type="button" (click)="showPassword.set(!showPassword())" class="icon-btn" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+          <app-icon [name]="showPassword() ? 'eyeOff' : 'eye'" [size]="15" />
+        </button>
+      </div>
+      @if (form.controls.password.dirty || pwValue()) {
+        <ul class="pw-checks" aria-label="Password requirements" aria-live="polite">
+          @for (c of pwChecks(); track c.label) {
+            <li [class.ok]="c.ok">
+              <app-icon [name]="c.ok ? 'check' : 'x'" [size]="12" /> {{ c.label }}
+            </li>
+          }
+        </ul>
+      }
+    </div>
+    @if (formError()) {
+      <p role="alert" class="form-error col-span-full">{{ formError() }}</p>
+    }
+    <button type="submit" [disabled]="form.invalid || busy()" class="btn btn-primary btn-block col-span-full">
+      {{ busy() ? 'Creating…' : 'Create account' }}
+    </button>
+  </form>
+  <p class="auth-switch">
+    Have an account? <a routerLink="/login" class="auth-link">Sign in</a>
+  </p>
+</app-auth-layout>

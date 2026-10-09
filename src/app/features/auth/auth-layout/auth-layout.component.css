@@ -1,0 +1,137 @@
+.auth-split {
+  min-height: calc(100dvh - 57px);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(140deg, #312e81 0%, #4f46e5 45%, #7c3aed 100%);
+  color: #fff;
+  padding: 3rem 2.5rem;
+  flex-direction: column;
+}
+
+[data-theme='dark'] .brand-panel {
+  background: linear-gradient(140deg, #1e1b4b 0%, #2e2a7a 50%, #4c1d95 100%);
+}
+
+@media (min-width: 900px) {
+  .auth-split {
+    grid-template-columns: 1fr 1.1fr;
+  }
+
+  .brand-panel {
+    display: flex;
+  }
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.brand-mark {
+  width: 2rem;
+  height: 2rem;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+}
+
+.brand-headline {
+  margin-top: 3.5rem;
+  font-size: 2.25rem;
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand-sub {
+  margin-top: 0.875rem;
+  color: #c7d2fe;
+  font-size: 0.9375rem;
+  max-width: 24rem;
+  line-height: 1.6;
+}
+
+.brand-points {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.brand-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.brand-motif {
+  margin-top: auto;
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 2.5rem;
+}
+
+.motif-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-radius: 0.875rem;
+  padding: 0.625rem;
+  backdrop-filter: blur(2px);
+}
+
+.motif-card {
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  background: rgb(255 255 255 / 0.75);
+}
+
+.motif-card.done {
+  background: #6ee7b7;
+}
+
+.w50 { width: 50%; }
+.w60 { width: 60%; }
+.w70 { width: 70%; }
+.w80 { width: 80%; }
+.w90 { width: 90%; }
+
+.form-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 27rem;
+  padding: 2rem;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.auth-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}

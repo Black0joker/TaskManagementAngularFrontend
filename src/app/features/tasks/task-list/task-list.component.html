@@ -1,0 +1,159 @@
+<div class="page">
+  <div class="crumbs">
+    <a [routerLink]="['/projects', projectId]" class="back-link">
+      <app-icon name="arrowLeft" [size]="14" /> {{ projectName() || 'Project' }}
+    </a>
+    <span class="crumb-sep">/</span>
+    <h1 class="page-title">Tasks</h1>
+    <span class="pill count-pill tnum">{{ store.result().totalCount }}</span>
+  </div>
+  <div class="page-actions">
+    <div class="seg" role="tablist" aria-label="Task view">
+      <a [routerLink]="['/projects', projectId, 'board']" routerLinkActive="active" class="seg-btn" role="tab">
+        <app-icon name="board" [size]="14" /> Board
+      </a>
+      <a [routerLink]="['/projects', projectId, 'list']" routerLinkActive="active" class="seg-btn" role="tab">
+        <app-icon name="list" [size]="14" /> List
+      </a>
+    </div>
+    <button (click)="showCreate.set(true)" class="btn btn-primary btn-sm">
+      <app-icon name="plus" [size]="14" /> New task
+    </button>
+  </div>
+
+  @if (showCreate()) {
+    <div class="card card-pad create-card">
+      <app-task-form [projectId]="projectId" (saved)="showCreate.set(false); load()" (cancelled)="showCreate.set(false)" />
+    </div>
+  }
+
+  <div class="filterbar card">
+    <div class="search-wrap">
+      <app-icon name="search" [size]="15" class="search-icon" />
+      <input
+        [(ngModel)]="f.search"
+        (keyup.enter)="applyFilters()"
+        name="search"
+        maxlength="201"
+        placeholder="Search tasks… (max 200)"
+        aria-label="Search tasks"
+        class="field-input search-input" />
+    </div>
+    <button (click)="filtersOpen.set(!filtersOpen())" class="btn btn-ghost btn-sm" [attr.aria-expanded]="filtersOpen()">
+      <app-icon name="filter" [size]="14" /> Filters
+      @if (activeFilterCount > 0) {
+        <span class="pill filter-count tnum">{{ activeFilterCount }}</span>
+      }
+    </button>
+    <button (click)="applyFilters()" class="btn btn-dark btn-sm">Apply</button>
+  </div>
+
+  @if (filtersOpen()) {
+    <form (ngSubmit)="applyFilters()" class="filter-panel card card-pad">
+      <div class="filter-grid">
+        <div class="filter-field">Status
+          <ng-select
+            [(ngModel)]="f.status"
+            name="status"
+            [items]="statuses"
+            placeholder="Any"
+            aria-label="Filter by status" />
+        </div>
+        <div class="filter-field">Priority
+          <ng-select
+            [(ngModel)]="f.priority"
+            name="priority"
+            [items]="priorities"
+            placeholder="Any"
+            aria-label="Filter by priority" />
+        </div>
+        <div class="filter-field">Sort by
+          <ng-select
+            [(ngModel)]="f.sortBy"
+            name="sortBy"
+            [items]="sortFields"
+            [clearable]="false"
+            aria-label="Sort by" />
+        </div>
+        <div class="filter-field">Direction
+          <ng-select
+            [(ngModel)]="f.sortDirection"
+            name="sortDirection"
+            [items]="sortDirections"
+            bindLabel="label"
+            bindValue="value"
+            [clearable]="false"
+            [searchable]="false"
+            aria-label="Sort direction" />
+        </div>
+        <div class="filter-field due-range">Due range
+          <app-date-picker
+            [(ngModel)]="dateRange"
+            name="dueRange"
+            mode="range"
+            placeholder="Any dates"
+            ariaLabel="Filter by due date range" />
+        </div>
+      </div>
+      <div class="check-row">
+        <label class="check"><input type="checkbox" [(ngModel)]="f.overdue" name="overdue" /> Overdue</label>
+        <label class="check"><input type="checkbox" [(ngModel)]="f.dueToday" name="dueToday" /> Due today</label>
+        <label class="check"><input type="checkbox" [(ngModel)]="f.dueThisWeek" name="dueThisWeek" /> Due this week</label>
+        <label class="check"><input type="checkbox" [(ngModel)]="f.noDueDate" name="noDueDate" /> No due date</label>
+      </div>
+      <div class="filter-actions">
+        <button type="submit" class="btn btn-dark btn-sm">Apply filters</button>
+        <button type="button" (click)="clear()" class="btn btn-ghost btn-sm">Clear all</button>
+      </div>
+    </form>
+  }
+
+  @if (store.loading()) {
+    <div class="card list-card skeleton-list" aria-label="Loading tasks">
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+    </div>
+  } @else if (store.result().items.length === 0) {
+    <div class="empty-wrap">
+      <app-empty-state title="No tasks match" hint="Adjust filters or create a task." icon="inbox" />
+    </div>
+  } @else {
+    <ul class="card list-card">
+      @for (t of store.result().items; track t.id) {
+        <li>
+          <a [routerLink]="['/tasks', t.id]" class="task-row">
+            <span class="pill {{ statusPill(t.status) }}">{{ t.status }}</span>
+            <span class="task-main">
+              <span class="task-link">{{ t.title }}</span>
+              <span class="task-sub">
+                <span class="due-chip {{ dueInfo(t.dueDate).cls }}">{{ dueInfo(t.dueDate).label }}</span>
+                <span class="pri-dot pri-{{ t.priority.toLowerCase() }}" [title]="t.priority"></span>
+                {{ t.priority }}
+              </span>
+            </span>
+            @if (t.assignedTo) {
+              <app-avatar [name]="t.assignedTo.name" [size]="26" />
+            } @else {
+              <span class="unassigned"><app-icon name="user" [size]="13" /></span>
+            }
+            <app-icon name="chevronRight" [size]="14" class="row-go" />
+          </a>
+        </li>
+      }
+    </ul>
+    <div class="pager-wrap card">
+      <app-pager
+        [page]="store.result().page"
+        [pageSize]="store.result().pageSize"
+        [totalCount]="store.result().totalCount"
+        [totalPages]="store.result().totalPages"
+        [hasNextPage]="store.result().hasNextPage"
+        [hasPreviousPage]="store.result().hasPreviousPage"
+        (pageChange)="gotoPage($event)"
+        (pageSizeChange)="changeSize($event)" />
+    </div>
+  }
+</div>

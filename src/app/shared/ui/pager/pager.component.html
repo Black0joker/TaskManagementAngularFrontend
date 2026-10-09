@@ -1,0 +1,18 @@
+<div class="pager">
+  <span>Page {{ page() }} of {{ totalPages() }} · {{ totalCount() }} total</span>
+  <div class="pager-actions">
+    <label class="pager-per-page">
+      Per page
+      <ng-select
+        [ngModel]="pageSize()"
+        (ngModelChange)="pageSizeChange.emit($event)"
+        [items]="pageSizeOptions"
+        [clearable]="false"
+        [searchable]="false"
+        aria-label="Items per page"
+        class="ng-compact pager-ng" />
+    </label>
+    <button (click)="pageChange.emit(page() - 1)" [disabled]="!hasPreviousPage()" class="pager-btn">Prev</button>
+    <button (click)="pageChange.emit(page() + 1)" [disabled]="!hasNextPage()" class="pager-btn">Next</button>
+  </div>
+</div>

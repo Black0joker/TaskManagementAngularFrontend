@@ -1,0 +1,17 @@
+<div class="confirm-card" role="alertdialog" aria-modal="true" [attr.aria-label]="data.title">
+  <div class="confirm-icon" [class.confirm-icon-danger]="data.danger">
+    <app-icon [name]="data.danger ? 'alert' : 'check'" [size]="20" />
+  </div>
+  <h2 class="confirm-title">{{ data.title }}</h2>
+  <p class="confirm-message">{{ data.message }}</p>
+  <div class="confirm-actions">
+    <button (click)="ref.close(false)" class="btn btn-ghost">Cancel</button>
+    <button
+      (click)="ref.close(true)"
+      class="btn"
+      [class.btn-danger-solid]="data.danger"
+      [class.btn-primary]="!data.danger">
+      {{ data.confirmLabel ?? 'Confirm' }}
+    </button>
+  </div>
+</div>

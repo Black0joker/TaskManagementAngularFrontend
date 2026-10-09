@@ -1,0 +1,79 @@
+<div class="page">
+  <a [routerLink]="['/projects', projectId]" class="back-link">
+    <app-icon name="arrowLeft" [size]="14" /> Project
+  </a>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Members <span class="pill count-pill tnum">{{ members().length }}</span></h1>
+      <p class="page-subtitle">
+        Adding a member needs a known <code>userId</code> — there is no user-search endpoint.
+        Reuse IDs from this list or comments.
+      </p>
+    </div>
+  </div>
+
+  <form (ngSubmit)="add()" class="card card-pad add-card">
+    <label class="field">User ID
+      <input
+        [(ngModel)]="newUserId"
+        name="userId"
+        required
+        placeholder="Paste a user ID…"
+        list="known-users"
+        class="field-input" />
+      <datalist id="known-users">
+        @for (m of members(); track m.userId) {
+          <option [value]="m.userId">{{ m.email }} ({{ m.firstName }} {{ m.lastName }})</option>
+        }
+      </datalist>
+    </label>
+    <div class="field">Role
+      <ng-select
+        [(ngModel)]="newRole"
+        name="role"
+        [items]="roles"
+        [clearable]="false"
+        aria-label="Role for new member" />
+    </div>
+    <div class="add-action">
+      <button type="submit" [disabled]="!newUserId.trim() || busy()" class="btn btn-primary btn-sm">
+        <app-icon name="plus" [size]="14" /> Add member
+      </button>
+    </div>
+  </form>
+
+  @if (loading()) {
+    <div class="card list-card skeleton-list" aria-label="Loading members">
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+      <app-skeleton kind="row" />
+    </div>
+  } @else if (members().length === 0) {
+    <div class="empty-wrap">
+      <app-empty-state title="No members yet" hint="Add members by user ID to start collaborating." icon="users" />
+    </div>
+  } @else {
+    <ul class="card list-card">
+      @for (m of members(); track m.userId) {
+        <li class="member-row">
+          <app-avatar [name]="m.firstName + ' ' + m.lastName" [size]="34" />
+          <div class="member-id">
+            <p class="member-name">{{ m.firstName }} {{ m.lastName }}</p>
+            <p class="member-email">{{ m.email }}</p>
+          </div>
+          <span class="pill role-pill {{ m.role.toLowerCase() }}">{{ m.role }}</span>
+          <ng-select
+            [ngModel]="m.role"
+            (ngModelChange)="changeRole(m, $event)"
+            [items]="roles"
+            [clearable]="false"
+            [attr.aria-label]="'Role for ' + m.email"
+            class="role-select" />
+          <button (click)="remove(m)" class="icon-danger" [attr.aria-label]="'Remove ' + m.email">
+            <app-icon name="trash" [size]="14" />
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

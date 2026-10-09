@@ -1,0 +1,255 @@
+.detail-header {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.head-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.role-pill {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  border-color: transparent;
+}
+
+.meta {
+  margin-top: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.sk-h-title {
+  height: 1.75rem;
+  width: 16rem;
+}
+
+.sk-h-sub {
+  height: 0.9rem;
+  width: 24rem;
+  max-width: 100%;
+  margin-top: 0.5rem;
+}
+
+.not-found-card {
+  margin-top: 1.5rem;
+}
+
+.tabs {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.active {
+  color: var(--brand-ink);
+  border-bottom-color: var(--brand);
+}
+
+.edit-card {
+  margin-top: 1rem;
+}
+
+.stats {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat {
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.stat-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.stat-alert .stat-num {
+  color: var(--danger);
+}
+
+.stat-flow {
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.flow-bar {
+  display: flex;
+  height: 0.5rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: var(--surface-3);
+}
+
+.flow-seg {
+  height: 100%;
+}
+
+.seg-todo { background: var(--st-todo); }
+.seg-inprogress { background: var(--st-progress); }
+.seg-inreview { background: var(--st-review); }
+.seg-done { background: var(--st-done); }
+.seg-cancelled { background: var(--st-cancelled); }
+
+.detail-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-link {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--brand-ink);
+  text-decoration: none;
+}
+
+.section-link:hover {
+  text-decoration: underline;
+}
+
+.task-list li + li {
+  border-top: 1px solid var(--border);
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.25rem;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.task-row:hover {
+  background: var(--surface-2);
+}
+
+.task-row:hover .task-link {
+  color: var(--brand-ink);
+}
+
+.task-link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.task-priority {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.row-go {
+  color: var(--text-faint);
+}
+
+.shortcut-list {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shortcut {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--brand-ink);
+  transition: background-color 0.15s ease;
+}
+
+.shortcut:hover {
+  background: var(--surface-2);
+}
+
+.shortcut span {
+  display: flex;
+  flex-direction: column;
+}
+
+.shortcut strong {
+  font-size: 0.8125rem;
+  color: var(--text);
+}
+
+.shortcut small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

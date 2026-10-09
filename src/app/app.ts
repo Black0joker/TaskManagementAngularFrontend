@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { ShellComponent } from './shell/shell.component';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [ShellComponent],
   selector: 'app-root',
-  styleUrl: './app.css',
   templateUrl: './app.html',
+  styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('TaskManagement');
-}
+export class App {}

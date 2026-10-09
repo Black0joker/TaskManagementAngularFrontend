@@ -1,0 +1,117 @@
+.count-pill {
+  background: var(--surface-3);
+  vertical-align: middle;
+}
+
+.add-card {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .add-card {
+    grid-template-columns: 2fr 1fr auto;
+    align-items: end;
+  }
+}
+
+.field {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.add-action {
+  display: flex;
+}
+
+.empty-wrap {
+  margin-top: 1.5rem;
+}
+
+.list-card {
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.list-card li + li {
+  border-top: 1px solid var(--border);
+}
+
+.skeleton-list {
+  padding: 0.25rem 0;
+}
+
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.member-id {
+  min-width: 0;
+  flex: 1;
+}
+
+.member-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-email {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role-pill.owner {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  border-color: transparent;
+}
+
+.role-pill.admin {
+  background: var(--info-soft);
+  color: var(--info);
+  border-color: transparent;
+}
+
+.role-pill.member {
+  background: var(--success-soft);
+  color: var(--success);
+  border-color: transparent;
+}
+
+.role-pill.viewer {
+  background: var(--surface-3);
+  color: var(--text-muted);
+}
+
+.role-select {
+  width: 9rem;
+  font-size: 0.75rem;
+}
+
+.icon-danger {
+  display: inline-flex;
+  padding: 0.4375rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+}
+
+.icon-danger:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}

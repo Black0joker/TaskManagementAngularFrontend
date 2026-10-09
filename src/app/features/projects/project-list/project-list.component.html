@@ -1,0 +1,104 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Projects</h1>
+      <p class="page-subtitle">
+        {{ store.projects().length }} total
+        @if (store.search()) {
+          · {{ filtered().length }} match "{{ store.search() }}"
+        }
+      </p>
+    </div>
+    <div class="header-actions">
+      <button (click)="showCreate.set(true)" class="btn btn-primary">
+        <app-icon name="plus" [size]="15" /> New project
+      </button>
+    </div>
+  </div>
+
+  <div class="toolbar card">
+    <div class="search-wrap">
+      <app-icon name="search" [size]="15" class="search-icon" />
+      <input
+        [(ngModel)]="q"
+        (ngModelChange)="store.setSearch($any($event))"
+        placeholder="Search projects…"
+        aria-label="Search projects"
+        class="field-input search-input" />
+      @if (q) {
+        <button (click)="clearSearch()" class="search-clear" aria-label="Clear search">
+          <app-icon name="x" [size]="14" />
+        </button>
+      }
+    </div>
+    <div class="sort-wrap">
+      <ng-select
+        [(ngModel)]="sort"
+        [items]="sortOptions"
+        bindLabel="label"
+        bindValue="value"
+        [clearable]="false"
+        aria-label="Sort projects"
+        class="sort-select" />
+    </div>
+  </div>
+
+  @if (showCreate()) {
+    <div class="card card-pad create-card">
+      <h2 class="section-title create-title">New project</h2>
+      <app-project-form (saved)="showCreate.set(false); reload()" (cancelled)="showCreate.set(false)" />
+    </div>
+  }
+
+  @if (store.loading()) {
+    <div class="card-grid" aria-label="Loading projects">
+      <app-skeleton kind="card" />
+      <app-skeleton kind="card" />
+      <app-skeleton kind="card" />
+      <app-skeleton kind="card" />
+      <app-skeleton kind="card" />
+      <app-skeleton kind="card" />
+    </div>
+  } @else if (store.error()) {
+    <div class="card card-pad error-card">
+      <app-icon name="error" [size]="20" />
+      <p class="error-text">{{ store.error() }}</p>
+      <button (click)="reload()" class="btn btn-ghost btn-sm">Try again</button>
+    </div>
+  } @else if (filtered().length === 0) {
+    <div class="empty-wrap">
+      <app-empty-state
+        title="No projects found"
+        hint="Create one to get started, or clear your search."
+        icon="dashboard" />
+    </div>
+  } @else {
+    <div class="card-grid">
+      @for (p of filtered(); track p.id) {
+        <article class="project-card card">
+          <a [routerLink]="['/projects', p.id]" class="card-main" [title]="p.name">
+            <app-avatar [name]="p.name" [size]="40" />
+            <div class="card-text">
+              <h2 class="project-name">{{ p.name }}</h2>
+              <p class="project-desc">{{ p.description || 'No description' }}</p>
+            </div>
+          </a>
+          <p class="project-meta tnum">Updated {{ p.updatedAt.slice(0, 10) }}</p>
+          <div class="card-links">
+            <a [routerLink]="['/projects', p.id, 'board']" class="mini-link">
+              <app-icon name="board" [size]="13" /> Board
+            </a>
+            <a [routerLink]="['/projects', p.id, 'list']" class="mini-link">
+              <app-icon name="list" [size]="13" /> Tasks
+            </a>
+            @if (auth.isAdmin()) {
+              <button (click)="remove(p.id, p.name)" class="mini-danger" aria-label="Delete {{ p.name }}">
+                <app-icon name="trash" [size]="13" />
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

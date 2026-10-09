@@ -1,0 +1,130 @@
+<button
+  type="button"
+  class="dp-trigger field-input"
+  [attr.id]="inputId()"
+  [class.dp-empty]="!hasValue()"
+  (click)="toggle()"
+  [disabled]="disabled()"
+  cdkOverlayOrigin
+  #origin="cdkOverlayOrigin"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="ariaLabel()">
+  <app-icon name="calendar" [size]="15" class="dp-cal" />
+  <span class="dp-text">{{ display() }}</span>
+  @if (hasValue()) {
+    <span
+      class="dp-clear"
+      role="button"
+      tabindex="0"
+      aria-label="Clear date"
+      (click)="$event.stopPropagation(); clear()"
+      (keydown.enter)="$event.stopPropagation(); clear()">
+      <app-icon name="x" [size]="13" />
+    </span>
+  }
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOpen]="open()"
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayPositions]="[
+    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6 },
+    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', offsetY: -6 },
+    { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 6 }
+  ]"
+  [cdkConnectedOverlayPush]="true"
+  (overlayOutsideClick)="close()"
+  (detach)="close()">
+  <div class="dp-panel card" role="dialog" aria-modal="false" aria-label="Choose a date">
+    <div class="dp-head">
+      <button type="button" class="dp-nav" (click)="stepMonth(-1)" aria-label="Previous month">
+        <app-icon name="arrowLeft" [size]="14" />
+      </button>
+      <button type="button" class="dp-title" (click)="pickingMonth.set(!pickingMonth())" [attr.aria-expanded]="pickingMonth()">
+        {{ pickingMonth() ? viewDate().getFullYear() : title() }}
+      </button>
+      <button type="button" class="dp-nav" (click)="stepMonth(1)" aria-label="Next month">
+        <app-icon name="arrowRight" [size]="14" />
+      </button>
+    </div>
+
+    @if (pickingMonth()) {
+      <div class="dp-months">
+        @for (m of months; track m; let i = $index) {
+          <button
+            type="button"
+            class="dp-month"
+            [class.selected]="i === viewDate().getMonth()"
+            (click)="pickMonth(i)">
+            {{ m.slice(0, 3) }}
+          </button>
+        }
+      </div>
+      <div class="dp-years">
+        <button type="button" class="dp-nav" (click)="setYear(viewDate().getFullYear() - 1)" aria-label="Previous year">
+          <app-icon name="arrowLeft" [size]="13" />
+        </button>
+        <span class="dp-year tnum">{{ viewDate().getFullYear() }}</span>
+        <button type="button" class="dp-nav" (click)="setYear(viewDate().getFullYear() + 1)" aria-label="Next year">
+          <app-icon name="arrowRight" [size]="13" />
+        </button>
+        <div class="dp-yearlist nice-scroll">
+          @for (y of yearOptions(); track y) {
+            <button
+              type="button"
+              class="dp-yearopt tnum"
+              [class.selected]="y === viewDate().getFullYear()"
+              (click)="setYear(y)">
+              {{ y }}
+            </button>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="dp-presets" aria-label="Quick dates">
+        <button type="button" (click)="preset(0)">Today</button>
+        <button type="button" (click)="preset(1)">Tomorrow</button>
+        <button type="button" (click)="preset(7)">Next week</button>
+      </div>
+      <div
+        class="dp-grid"
+        role="grid"
+        aria-label="Calendar"
+        tabindex="-1"
+        (keydown)="onGridKeydown($event)">
+        <div class="dp-row dp-weekhead" role="row">
+          <span class="dp-wn" aria-hidden="true">#</span>
+          @for (w of weekdays; track w) {
+            <span class="dp-wd" role="columnheader">{{ w }}</span>
+          }
+        </div>
+        @for (week of weeks(); track week[0].key) {
+          <div class="dp-row" role="row">
+            <span class="dp-wn tnum" aria-hidden="true">{{ weekNumber(week) }}</span>
+            @for (day of week; track day.key) {
+              <button
+                type="button"
+                role="gridcell"
+                class="dp-day tnum"
+                [attr.data-day]="day.key"
+                [class.outside]="!day.inMonth"
+                [class.selected]="isSelected(day.key)"
+                [class.edge]="isRangeEdge(day.key)"
+                [class.preview]="inRangePreview(day.key)"
+                [class.today]="day.key === today()"
+                [disabled]="isDisabledDay(day)"
+                [attr.aria-selected]="isSelected(day.key)"
+                [attr.aria-label]="day.key"
+                (click)="pick(day)"
+                (mouseenter)="hoverKey.set(day.key)">
+                {{ day.date.getDate() }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-template>

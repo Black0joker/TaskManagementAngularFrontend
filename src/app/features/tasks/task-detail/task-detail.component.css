@@ -1,0 +1,307 @@
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.crumb-sep {
+  color: var(--text-faint);
+}
+
+.crumb-current {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sk-title-lg {
+  height: 2rem;
+  width: 60%;
+}
+
+.sk-line-md {
+  height: 0.9rem;
+  width: 80%;
+  margin-top: 0.5rem;
+}
+
+.not-found-card {
+  margin-top: 1.5rem;
+}
+
+.detail-head {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.875rem;
+}
+
+.title-block {
+  min-width: 0;
+  flex: 1;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.due-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  background: var(--surface-3);
+  color: var(--text-muted);
+}
+
+.due-over { background: var(--danger-soft); color: var(--danger); }
+.due-today { background: var(--warning-soft); color: var(--warning); }
+.due-soon { background: var(--info-soft); color: var(--info); }
+
+.meta {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.edit-card {
+  margin-top: 1rem;
+}
+
+.label-strip {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.label-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.25rem 0.375rem 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.dot {
+  display: inline-block;
+  height: 0.625rem;
+  width: 0.625rem;
+  border-radius: 9999px;
+}
+
+.chip-x {
+  display: inline-flex;
+  padding: 0.125rem;
+  border-radius: 9999px;
+  color: var(--text-faint);
+}
+
+.chip-x:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.assignee-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-2);
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.1875rem 0.625rem 0.1875rem 0.1875rem;
+}
+
+.assignee-chip.none {
+  color: var(--text-faint);
+  padding: 0.25rem 0.625rem;
+}
+
+.two-col {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .two-col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.patch-form {
+  margin-top: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.field .field-input,
+.field .field-select,
+.field ng-select,
+.field app-date-picker {
+  margin-top: 0.25rem;
+}
+
+.field app-date-picker {
+  display: block;
+}
+
+.field-note {
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.patch-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.label-pick {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.label-btn:hover {
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+.comments-card {
+  margin-top: 1rem;
+}
+
+.count-pill {
+  background: var(--surface-3);
+  vertical-align: middle;
+}
+
+.comment-form {
+  margin-top: 0.875rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comment-form .field-input {
+  flex: 1;
+}
+
+.empty-comments {
+  margin-top: 0.75rem;
+}
+
+.comment-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment {
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-meta {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.comment-meta strong {
+  color: var(--text-2);
+}
+
+.comment-text {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comment-edit {
+  margin-top: 0.375rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.link-save {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--brand-ink);
+  white-space: nowrap;
+}
+
+.link-cancel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.comment-actions {
+  margin-top: 0.375rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.link-edit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--brand-ink);
+}
+
+.link-edit:hover {
+  text-decoration: underline;
+}
+
+.link-delete {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.link-delete:hover {
+  text-decoration: underline;
+}
+
+.pager-wrap {
+  margin-top: 1rem;
+}

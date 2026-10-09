@@ -1,0 +1,184 @@
+<div class="page">
+  @if (loading()) {
+    <div class="detail-head">
+      <div class="skeleton sk-title-lg"></div>
+      <div class="skeleton sk-line-md"></div>
+    </div>
+    <app-skeleton kind="lines" />
+  } @else if (notFound()) {
+    <div class="card card-pad not-found-card">
+      <app-empty-state title="Task not found" hint="It may have been deleted or you lack access." icon="error" />
+    </div>
+  } @else if (task()) {
+    @let t = task()!;
+    <div class="crumbs">
+      <a [routerLink]="['/projects', t.projectId]" class="back-link">
+        <app-icon name="arrowLeft" [size]="14" /> Project
+      </a>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-current">{{ t.title }}</span>
+    </div>
+
+    <div class="detail-head">
+      <div class="title-block">
+        <div class="pill-row">
+          <span class="pill {{ statusPill(t.status) }}">{{ t.status }}</span>
+          <span class="pill {{ t.priority === 'Critical' ? 'pill-critical' : t.priority === 'High' ? 'pill-high' : '' }}">{{ t.priority }}</span>
+          <span class="due-chip {{ dueInfo(t.dueDate).cls }}">
+            <app-icon name="calendar" [size]="12" /> {{ dueInfo(t.dueDate).label }}
+          </span>
+        </div>
+        <h1 class="page-title">{{ t.title }}</h1>
+        <p class="page-subtitle">{{ t.description || 'No description' }}</p>
+        <p class="meta tnum">
+          Created {{ t.createdAt | date:'mediumDate' }} · Updated {{ t.updatedAt | date:'mediumDate' }}
+        </p>
+      </div>
+      <div class="header-actions">
+        <button (click)="editing.set(!editing())" class="btn btn-ghost btn-sm">
+          <app-icon name="pencil" [size]="14" /> Edit
+        </button>
+        <button (click)="remove()" class="btn btn-danger btn-sm">
+          <app-icon name="trash" [size]="14" /> Delete
+        </button>
+      </div>
+    </div>
+
+    @if (editing()) {
+      <div class="card card-pad edit-card">
+        <app-task-form [projectId]="t.projectId" [initial]="t" (saved)="onSaved($event)" (cancelled)="editing.set(false)" />
+      </div>
+    }
+
+    <div class="label-strip">
+      @for (l of t.labels; track l.id) {
+        <span class="label-chip">
+          <span class="dot" [style.background]="l.color"></span>
+          {{ l.name }}
+          <button (click)="removeLabel(l.id)" class="chip-x" aria-label="Remove label {{ l.name }}">
+            <app-icon name="x" [size]="11" />
+          </button>
+        </span>
+      }
+      @if (t.assignedTo) {
+        <span class="assignee-chip">
+          <app-avatar [name]="t.assignedTo.name" [size]="20" />
+          {{ t.assignedTo.name }}
+        </span>
+      } @else {
+        <span class="assignee-chip none"><app-icon name="user" [size]="12" /> Unassigned</span>
+      }
+    </div>
+
+    <div class="two-col">
+      <div class="card card-pad">
+        <h2 class="section-title">Properties</h2>
+        <div class="patch-form">
+          <div class="field">Status
+            <ng-select
+              [(ngModel)]="quick.status"
+              [items]="statuses"
+              [clearable]="false"
+              [searchable]="false"
+              aria-label="Status" />
+          </div>
+          <div class="field">Priority
+            <ng-select
+              [(ngModel)]="quick.priority"
+              [items]="priorities"
+              [clearable]="false"
+              [searchable]="false"
+              aria-label="Priority" />
+          </div>
+          <label class="field">Assignee user ID <span class="field-note">(blank = unassign)</span>
+            <input [(ngModel)]="quick.assignee" placeholder="user id" class="field-input" />
+          </label>
+          <div class="field">Due date <span class="field-note">(blank = clear)</span>
+            <app-date-picker [(ngModel)]="quick.dueDate" ariaLabel="Due date" placeholder="No due date" />
+          </div>
+          <div class="patch-actions">
+            <button (click)="doPatch('status')" class="btn btn-dark btn-sm">Set status</button>
+            <button (click)="doPatch('priority')" class="btn btn-ghost btn-sm">Priority</button>
+            <button (click)="doPatch('assignee')" class="btn btn-ghost btn-sm">Assignee</button>
+            <button (click)="doPatch('dueDate')" class="btn btn-ghost btn-sm">Due date</button>
+          </div>
+        </div>
+      </div>
+      <div class="card card-pad">
+        <h2 class="section-title">Project labels</h2>
+        @if (labels().length === 0) {
+          <p class="section-hint">No labels in this project yet.</p>
+        } @else {
+          <div class="label-pick">
+            @for (l of labels(); track l.id) {
+              <button (click)="addLabel(l.id)" class="label-chip label-btn">
+                <span class="dot" [style.background]="l.color"></span>{{ l.name }}
+                <app-icon name="plus" [size]="11" />
+              </button>
+            }
+          </div>
+        }
+        <p class="fine-print">Done tasks are immutable — label changes will be rejected.</p>
+      </div>
+    </div>
+
+    <div class="card card-pad comments-card">
+      <h2 class="section-title">Comments <span class="pill count-pill tnum">{{ comments().totalCount }}</span></h2>
+      <form (ngSubmit)="addComment()" class="comment-form">
+        <input
+          [(ngModel)]="draft"
+          name="draft"
+          maxlength="5000"
+          placeholder="Write a comment… (max 5000)"
+          aria-label="Write a comment"
+          class="field-input" />
+        <button type="submit" [disabled]="!draft.trim() || posting()" class="btn btn-primary btn-sm">
+          {{ posting() ? 'Posting…' : 'Post' }}
+        </button>
+      </form>
+      @if (comments().items.length === 0) {
+        <p class="section-hint empty-comments">No comments yet — start the discussion.</p>
+      } @else {
+        <ul class="comment-list">
+          @for (c of comments().items; track c.id) {
+            <li class="comment">
+              <app-avatar [name]="c.authorName" [size]="30" />
+              <div class="comment-body">
+                <p class="comment-meta">
+                  <strong>{{ c.authorName }}</strong> · {{ relativeTime(c.createdAt) }}
+                </p>
+                @if (editingCommentId() === c.id) {
+                  <div class="comment-edit">
+                    <input [(ngModel)]="editDraft" name="editDraft" maxlength="5000" aria-label="Edit comment" class="field-input" />
+                    <button (click)="saveComment(c.id)" class="link-save">Save</button>
+                    <button (click)="editingCommentId.set(null)" class="link-cancel">Cancel</button>
+                  </div>
+                } @else {
+                  <p class="comment-text">{{ c.content }}</p>
+                  <div class="comment-actions">
+                    <button (click)="startEdit(c)" class="link-edit">Edit</button>
+                    <button (click)="deleteComment(c.id)" class="link-delete">Delete</button>
+                  </div>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      }
+      @if (comments().totalPages > 1) {
+        <div class="pager-wrap">
+          <app-pager
+            [page]="comments().page"
+            [pageSize]="comments().pageSize"
+            [totalCount]="comments().totalCount"
+            [totalPages]="comments().totalPages"
+            [hasNextPage]="comments().hasNextPage"
+            [hasPreviousPage]="comments().hasPreviousPage"
+            (pageChange)="gotoCommentPage($event)"
+            (pageSizeChange)="commentSize($event)" />
+        </div>
+      }
+      <p class="fine-print">Deleting a task with comments returns 409 — delete comments first.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,72 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="task-form" novalidate>
+  <div>
+    <label class="field-label" for="task-title">Title</label>
+    <input id="task-title" formControlName="title" class="field-input" />
+    @if (form.controls.title.touched && form.controls.title.invalid) {
+      <p class="field-error">Required, max 200 characters.</p>
+    }
+  </div>
+  <div>
+    <label class="field-label" for="task-desc">Description</label>
+    <textarea id="task-desc" formControlName="description" rows="3" class="field-input"></textarea>
+    @if (form.controls.description.touched && form.controls.description.invalid) {
+      <p class="field-error">Max 2000 characters.</p>
+    }
+  </div>
+  <div class="grid-2">
+      <div>
+        <label class="field-label" for="task-status">Status</label>
+        <ng-select
+          inputId="task-status"
+          formControlName="status"
+          [items]="statuses"
+          [clearable]="false"
+          [searchable]="false" />
+      </div>
+      <div>
+        <label class="field-label" for="task-priority">Priority</label>
+        <ng-select
+          inputId="task-priority"
+          formControlName="priority"
+          [items]="priorities"
+          [clearable]="false"
+          [searchable]="false" />
+      </div>
+  </div>
+  <div class="grid-2">
+      <div>
+        <label class="field-label" for="task-due">Due date</label>
+        <app-date-picker
+          inputId="task-due"
+          formControlName="dueDate"
+          placeholder="Pick a due date"
+          [minToday]="true" />
+        @if (form.controls.dueDate.touched && form.controls.dueDate.invalid) {
+        <p class="field-error">Must not be in the past. Clear it for Done/Cancelled.</p>
+      }
+      @if (isDoneLikeSelected()) {
+        <p class="field-warn">Done/Cancelled forbids due dates — clear the field.</p>
+      }
+    </div>
+    <div>
+      <label class="field-label" for="task-assignee">Assignee userId (optional)</label>
+      <input
+        id="task-assignee"
+        formControlName="assignedToId"
+        placeholder="user id or blank = unassigned"
+        class="field-input" />
+      @if (needsAssignee()) {
+        <p class="field-warn">InProgress requires an assignee.</p>
+      }
+    </div>
+  </div>
+  @if (error()) {
+    <p role="alert" class="form-error">{{ error() }}</p>
+  }
+  <div class="form-actions">
+    <button type="button" (click)="cancelled.emit()" class="btn btn-ghost btn-sm">Cancel</button>
+    <button type="submit" [disabled]="form.invalid || busy()" class="btn btn-primary btn-sm">
+      {{ busy() ? 'Saving…' : initial() ? 'Save changes' : 'Create task' }}
+    </button>
+  </div>
+</form>

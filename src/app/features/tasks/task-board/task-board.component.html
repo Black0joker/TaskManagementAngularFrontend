@@ -1,0 +1,100 @@
+<div class="board-page">
+  <div class="board-top">
+    <div class="crumbs">
+      <a [routerLink]="['/projects', projectId]" class="back-link">
+        <app-icon name="arrowLeft" [size]="14" /> {{ projectName() || 'Project' }}
+      </a>
+      <span class="crumb-sep">/</span>
+      <h1 class="page-title">Board</h1>
+      @if (roleStore.myRole()) {
+        <span class="pill role-pill">{{ roleStore.myRole() }}</span>
+      }
+    </div>
+    <div class="header-actions">
+      <div class="seg" role="tablist" aria-label="Task view">
+        <a [routerLink]="['/projects', projectId, 'board']" routerLinkActive="active" class="seg-btn" role="tab">
+          <app-icon name="board" [size]="14" /> Board
+        </a>
+        <a [routerLink]="['/projects', projectId, 'list']" routerLinkActive="active" class="seg-btn" role="tab">
+          <app-icon name="list" [size]="14" /> List
+        </a>
+      </div>
+      <button (click)="showCreate.set(true)" class="btn btn-primary btn-sm">
+        <app-icon name="plus" [size]="14" /> New task
+      </button>
+    </div>
+  </div>
+
+  @if (showCreate()) {
+    <div class="card card-pad create-card">
+      <app-task-form [projectId]="projectId" (saved)="showCreate.set(false); reload()" (cancelled)="showCreate.set(false)" />
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="board" aria-label="Loading board">
+      <app-skeleton kind="board" />
+      <app-skeleton kind="board" />
+      <app-skeleton kind="board" />
+      <app-skeleton kind="board" />
+      <app-skeleton kind="board" />
+    </div>
+  } @else if (summaries().length === 0) {
+    <div class="empty-wrap">
+      <app-empty-state
+        title="No tasks yet"
+        hint="Create the first task to populate the board. Active statuses need a due date ≥ today."
+        icon="board" />
+    </div>
+  } @else {
+    <div class="board nice-scroll" cdkDropListGroup>
+      @for (col of columns; track col) {
+        <section
+          class="column col-{{ col.toLowerCase() }}"
+          cdkDropList
+          [cdkDropListData]="byStatus(col)()"
+          (cdkDropListDropped)="drop($event, col)"
+          [attr.aria-label]="col + ' column'">
+          <header class="column-head">
+            <span class="col-dot"></span>
+            <h2 class="column-title">{{ col }}</h2>
+            <span class="column-count tnum">{{ byStatus(col)().length }}</span>
+          </header>
+          <div class="column-body nice-scroll">
+            @for (t of byStatus(col)(); track t.id) {
+              <article
+                cdkDrag
+                [cdkDragData]="t"
+                class="task-card"
+                [class.task-done]="t.status === 'Done'">
+                <span class="pri-stripe {{ priorityClass(t.priority) }}" aria-hidden="true"></span>
+                <div class="card-top">
+                  <a [routerLink]="['/tasks', t.id]" class="task-title">{{ t.title }}</a>
+                  @if (isLocked(t)) {
+                    <app-icon name="lock" [size]="12" class="lock-icon" />
+                  }
+                </div>
+                <div class="card-foot">
+                  <span class="due-chip {{ dueInfo(t.dueDate).cls }}">
+                    <app-icon name="calendar" [size]="11" /> {{ dueInfo(t.dueDate).label }}
+                  </span>
+                  <span class="assignee" [class.unassigned]="!t.assignedToId">
+                    <app-icon name="user" [size]="11" />
+                    {{ t.assignedToId ? 'Assigned' : 'Unassigned' }}
+                  </span>
+                </div>
+              </article>
+            } @empty {
+              <p class="col-empty">Drop tasks here</p>
+            }
+          </div>
+        </section>
+      }
+    </div>
+    <p class="board-hint">
+      <app-icon name="lock" [size]="12" />
+      Backward moves, resurrecting Cancelled, and Done→Cancelled need Owner/Admin.
+      Unassigned tasks cannot enter InProgress. Done cards are read-only.
+    </p>
+  }
+</div>

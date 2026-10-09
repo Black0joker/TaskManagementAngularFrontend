@@ -1,0 +1,130 @@
+<div class="page">
+  <a routerLink="/projects" class="back-link"><app-icon name="arrowLeft" [size]="14" /> All projects</a>
+  @if (loading()) {
+    <div class="detail-header">
+      <app-avatar name="…" [size]="52" />
+      <div class="head-text">
+        <div class="skeleton sk-h-title"></div>
+        <div class="skeleton sk-h-sub"></div>
+      </div>
+    </div>
+    <app-skeleton kind="lines" />
+  } @else if (notFound()) {
+    <div class="card card-pad not-found-card">
+      <app-empty-state title="Project not found" hint="It may have been deleted or you lack access (403/404)." icon="error" />
+    </div>
+  } @else if (project()) {
+    <div class="detail-header">
+      <app-avatar [name]="project()!.name" [size]="52" />
+      <div class="head-text">
+        <div class="title-row">
+          <h1 class="page-title">{{ project()!.name }}</h1>
+          @if (myRole()) {
+            <span class="pill role-pill">{{ myRole() }}</span>
+          }
+        </div>
+        <p class="page-subtitle">{{ project()!.description || 'No description' }}</p>
+        <p class="meta tnum">
+          Created {{ project()!.createdAt | date:'mediumDate' }} · Updated {{ project()!.updatedAt | date:'mediumDate' }}
+        </p>
+      </div>
+      <div class="header-actions">
+        <button (click)="editing.set(!editing())" class="btn btn-ghost btn-sm">
+          <app-icon name="pencil" [size]="14" /> Edit
+        </button>
+        @if (auth.isAdmin()) {
+          <button (click)="remove()" class="btn btn-danger btn-sm">
+            <app-icon name="trash" [size]="14" /> Delete
+          </button>
+        }
+      </div>
+    </div>
+
+    <nav class="tabs" aria-label="Project sections">
+      <a [routerLink]="['/projects', project()!.id, 'board']" routerLinkActive="active" class="tab">
+        <app-icon name="board" [size]="14" /> Board
+      </a>
+      <a [routerLink]="['/projects', project()!.id, 'list']" routerLinkActive="active" class="tab">
+        <app-icon name="list" [size]="14" /> Tasks
+      </a>
+      <a [routerLink]="['/projects', project()!.id, 'members']" routerLinkActive="active" class="tab">
+        <app-icon name="users" [size]="14" /> Members
+      </a>
+      <a [routerLink]="['/projects', project()!.id, 'labels']" routerLinkActive="active" class="tab">
+        <app-icon name="tags" [size]="14" /> Labels
+      </a>
+    </nav>
+
+    @if (editing()) {
+      <div class="card card-pad edit-card">
+        <app-project-form #pf mode="edit" (saved)="editing.set(false); reload()" (cancelled)="editing.set(false)" />
+      </div>
+    }
+
+    <div class="stats">
+      <div class="stat card">
+        <span class="stat-num tnum">{{ openCount() }}</span>
+        <span class="stat-label">Open</span>
+      </div>
+      <div class="stat card">
+        <span class="stat-num tnum">{{ doneCount() }}</span>
+        <span class="stat-label">Done</span>
+      </div>
+      <div class="stat card" [class.stat-alert]="overdueCount() > 0">
+        <span class="stat-num tnum">{{ overdueCount() }}</span>
+        <span class="stat-label">Overdue</span>
+      </div>
+      <div class="stat card stat-flow">
+        <div class="flow-bar" aria-hidden="true">
+          @for (b of statusBars(); track b.status) {
+            <span class="flow-seg seg-{{ b.status.toLowerCase() }}" [style.width.%]="b.pct" [title]="b.status + ': ' + b.count"></span>
+          }
+        </div>
+        <span class="stat-label">{{ tasks().length }} tasks total</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="card card-pad">
+        <div class="section-head">
+          <h2 class="section-title">Recent tasks</h2>
+          <a [routerLink]="['/projects', project()!.id, 'list']" class="section-link">
+            View all <app-icon name="arrowRight" [size]="13" />
+          </a>
+        </div>
+        @if (tasks().length === 0) {
+          <app-empty-state
+            title="No tasks yet"
+            hint="Create one from the task list — active statuses need a due date ≥ today."
+            icon="inbox" />
+        } @else {
+          <ul class="task-list">
+            @for (t of tasks().slice(0, 8); track t.id) {
+              <li>
+                <a [routerLink]="['/tasks', t.id]" class="task-row">
+                  <span class="pill {{ statusPill(t.status) }}">{{ t.status }}</span>
+                  <span class="task-link">{{ t.title }}</span>
+                  <span class="task-priority">{{ t.priority }}</span>
+                  <app-icon name="chevronRight" [size]="14" class="row-go" />
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="card card-pad">
+        <h2 class="section-title">Manage</h2>
+        <div class="shortcut-list">
+          <a [routerLink]="['/projects', project()!.id, 'members']" class="shortcut">
+            <app-icon name="users" [size]="15" />
+            <span><strong>Members & roles</strong><small>Invite by user ID, set Owner…Viewer</small></span>
+          </a>
+          <a [routerLink]="['/projects', project()!.id, 'labels']" class="shortcut">
+            <app-icon name="tags" [size]="15" />
+            <span><strong>Labels</strong><small>Color-coded #RRGGBB tags</small></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>

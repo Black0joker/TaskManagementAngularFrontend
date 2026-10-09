@@ -1,0 +1,36 @@
+<div class="auth-split">
+  <div class="brand-panel">
+    <div class="brand-row">
+      <img src="favicon.svg" alt="" class="brand-mark" />
+      <span class="brand-name">TaskManagement</span>
+    </div>
+    <h2 class="brand-headline">Ship projects,<br />not chaos.</h2>
+    <p class="brand-sub">Boards, priorities, and due dates your whole team actually keeps up with.</p>
+    <ul class="brand-points">
+      <li><app-icon name="board" [size]="16" /> Drag-and-drop Kanban with guardrails</li>
+      <li><app-icon name="users" [size]="16" /> Project roles from Viewer to Owner</li>
+      <li><app-icon name="calendarClock" [size]="16" /> Due-date tracking that warns early</li>
+    </ul>
+    <div class="brand-motif" aria-hidden="true">
+      <div class="motif-col">
+        <span class="motif-card w80"></span>
+        <span class="motif-card w60"></span>
+      </div>
+      <div class="motif-col">
+        <span class="motif-card w70"></span>
+        <span class="motif-card w90"></span>
+        <span class="motif-card w50"></span>
+      </div>
+      <div class="motif-col">
+        <span class="motif-card w60 done"></span>
+      </div>
+    </div>
+  </div>
+  <div class="form-side">
+    <div class="form-card card">
+      <h1 class="auth-title">{{ title() }}</h1>
+      <p class="auth-subtitle">{{ subtitle() }}</p>
+      <ng-content />
+    </div>
+  </div>
+</div>

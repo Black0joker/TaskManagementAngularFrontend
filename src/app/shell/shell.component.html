@@ -1,0 +1,71 @@
+<app-toasts />
+<div class="shell">
+  @if (navOpen()) {
+    <div class="scrim" (click)="closeNav()" aria-hidden="true"></div>
+  }
+  <aside class="sidebar" [class.open]="navOpen()" aria-label="Primary">
+    <a routerLink="/projects" class="brand" (click)="closeNav()">
+      <img src="favicon.svg" alt="" class="brand-mark" />
+      <span class="brand-name">TaskManagement</span>
+    </a>
+
+    <nav class="nav">
+      <p class="nav-caption">Workspace</p>
+      <a
+        routerLink="/projects"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: false }"
+        class="nav-link"
+        (click)="closeNav()">
+        <app-icon name="dashboard" [size]="17" />
+        <span>Projects</span>
+      </a>
+    </nav>
+
+    <div class="side-footer">
+      <button (click)="theme.toggle()" class="theme-btn" [attr.aria-label]="theme.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
+        <app-icon [name]="theme.theme() === 'light' ? 'moon' : 'sun'" [size]="16" />
+        <span>{{ theme.theme() === 'light' ? 'Dark mode' : 'Light mode' }}</span>
+      </button>
+
+      @if (auth.isLoggedIn()) {
+        <div class="user-card">
+          <app-avatar [name]="auth.displayName() || auth.user()?.email || '?'" [size]="32" />
+          <div class="user-meta">
+            <p class="user-name">{{ auth.displayName() }}</p>
+            <p class="user-email">{{ auth.user()?.email }}</p>
+          </div>
+        </div>
+        @if (auth.isAdmin()) {
+          <p class="admin-badge"><app-icon name="check" [size]="12" /> Admin</p>
+        }
+        <button (click)="logout()" class="btn btn-ghost btn-sm logout-btn">
+          <app-icon name="logout" [size]="14" /> Sign out
+        </button>
+      } @else {
+        <div class="auth-links">
+          <a routerLink="/login" class="btn btn-ghost btn-sm" (click)="closeNav()">Sign in</a>
+          <a routerLink="/register" class="btn btn-primary btn-sm" (click)="closeNav()">Register</a>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="mobilebar">
+      <button (click)="navOpen.set(true)" class="btn btn-ghost btn-sm btn-icon" aria-label="Open navigation">
+        <app-icon name="menu" [size]="18" />
+      </button>
+      <a routerLink="/projects" class="mobile-brand">
+        <img src="favicon.svg" alt="" class="brand-mark sm" />
+        <span>TaskManagement</span>
+      </a>
+      <button (click)="theme.toggle()" class="btn btn-ghost btn-sm btn-icon" [attr.aria-label]="theme.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
+        <app-icon [name]="theme.theme() === 'light' ? 'moon' : 'sun'" [size]="16" />
+      </button>
+    </header>
+    <main class="shell-main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

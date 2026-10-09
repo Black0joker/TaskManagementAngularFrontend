@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="project-form" novalidate>
+  <div>
+    <label class="field-label" for="proj-name">Name</label>
+    <input id="proj-name" formControlName="name" class="field-input" />
+    @if (form.controls.name.touched && form.controls.name.invalid) {
+      <p class="field-error">Required, max 200 characters.</p>
+    }
+  </div>
+  <div>
+    <label class="field-label" for="proj-desc">Description</label>
+    <textarea id="proj-desc" formControlName="description" rows="3" class="field-input"></textarea>
+    @if (form.controls.description.touched && form.controls.description.invalid) {
+      <p class="field-error">Max 2000 characters.</p>
+    }
+  </div>
+  @if (error()) {
+    <p role="alert" class="form-error">{{ error() }}</p>
+  }
+  <div class="form-actions">
+    <button type="button" (click)="cancelled.emit()" class="btn btn-ghost btn-sm">Cancel</button>
+    <button type="submit" [disabled]="form.invalid || busy()" class="btn btn-primary btn-sm">
+      {{ busy() ? 'Saving…' : mode === 'edit' ? 'Save changes' : 'Create project' }}
+    </button>
+  </div>
+</form>

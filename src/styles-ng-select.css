@@ -1,0 +1,215 @@
+/*
+ * Custom ng-select theme — driven exclusively by the app's CSS-variable
+ * tokens so light + dark mode both work.
+ *
+ * DO NOT import any of ng-select's bundled themes
+ * (@ng-select/ng-select/themes/*.css or scss/*.theme.scss) — they are
+ * light-only and will break dark mode. This file is the only styling
+ * ng-select gets (imported once from styles.css).
+ */
+
+.ng-select {
+  display: block;
+  position: relative;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.ng-select .ng-select-container {
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0 0.5rem 0 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ng-select .ng-select-container:hover {
+  border-color: var(--text-faint);
+}
+
+.ng-select.ng-select-focused .ng-select-container {
+  border-color: var(--brand);
+  box-shadow: var(--ring);
+}
+
+.ng-select.ng-select-disabled .ng-select-container {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: var(--surface-2);
+}
+
+/* Validation state mirrors .field-input invalid styling hooks. */
+.ng-select.ng-invalid.ng-touched .ng-select-container {
+  border-color: var(--danger);
+}
+
+.ng-select .ng-value-container {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.375rem 0;
+}
+
+.ng-select .ng-value-container .ng-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ng-select .ng-value-container .ng-placeholder {
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ng-select .ng-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.ng-select .ng-input > input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.875rem;
+  padding: 0;
+}
+
+.ng-select .ng-input > input::placeholder {
+  color: var(--text-faint);
+}
+
+.ng-select .ng-clear-wrapper {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-faint);
+  border-radius: var(--radius-sm);
+  padding: 0.125rem;
+}
+
+.ng-select .ng-clear-wrapper:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.ng-select .ng-arrow-wrapper {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-faint);
+  padding-left: 0.375rem;
+}
+
+.ng-select .ng-arrow-wrapper .ng-arrow {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.15s ease;
+}
+
+.ng-select.ng-select-opened .ng-arrow-wrapper .ng-arrow {
+  transform: rotate(180deg);
+}
+
+.ng-select .ng-spinner-loader {
+  border-color: var(--border-strong);
+  border-right-color: var(--brand);
+}
+
+/* ---------- Dropdown panel (rendered in place, inherits theme) ---------- */
+.ng-dropdown-panel {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  max-height: 14rem;
+  overflow-y: auto;
+  padding: 0.25rem;
+}
+
+.ng-dropdown-panel .ng-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: calc(var(--radius-sm) - 2px);
+  padding: 0.5rem 0.625rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ng-dropdown-panel .ng-option.ng-option-marked {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.ng-dropdown-panel .ng-option.ng-option-selected {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
+.ng-dropdown-panel .ng-option.ng-option-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ng-dropdown-panel .ng-option .ng-option-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ng-dropdown-panel .ng-optgroup {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  padding: 0.5rem 0.625rem 0.25rem;
+}
+
+.ng-dropdown-panel .ng-dropdown-header,
+.ng-dropdown-panel .ng-dropdown-footer {
+  padding: 0.5rem 0.625rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.ng-dropdown-panel .ng-dropdown-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.ng-dropdown-panel .ng-dropdown-footer {
+  border-top: 1px solid var(--border);
+}
+
+.ng-dropdown-panel .ng-empty {
+  padding: 0.75rem 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* Compact variant for dense spots (pager). */
+.ng-select.ng-compact .ng-select-container {
+  min-height: 2rem;
+  font-size: 0.8125rem;
+}
